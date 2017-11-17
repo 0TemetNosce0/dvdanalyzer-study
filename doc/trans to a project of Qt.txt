@@ -1,0 +1,7 @@
+在mplayer源代码目录打开命令行，执行命令：
+
+qmake -project
+
+等待结束，会在mplayer目录生成mplayer.pro工程文件。
+之后把pandora/local/include目录下的三个文件夹拷贝到mplayer目录。
+最后用Qt Creator或VS打开。
