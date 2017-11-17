@@ -307,11 +307,11 @@ void print_dvd_info(digiarty_dvd_info* dvd_info) {
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3) {
-        return 1;
-    }
+//    if (argc != 3) {
+//        return 1;
+//    }
 
-    digiarty_dvd_info *dvd_info = get_dvd_info(argv[1], atoi(argv[2]));
+    digiarty_dvd_info *dvd_info = get_dvd_info("F:/My DVD"/*argv[1]*/, 0/*atoi(argv[2])*/);
     if (dvd_info) {
         print_dvd_info(dvd_info);
         free_dvd_info(dvd_info);

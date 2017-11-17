@@ -1,0 +1,126 @@
+DVD视频内容被分为titles(影片或唱片)和分块的titles(章节或歌曲).Titles由cells构成，这些cells 被一个或多个的节目链(PGCs)连接起来。cell是dvd上最小的视频单元。有时一个cell相当于一个章节，但是这样的情况不常出现。
+视角目录单：可以不同视角
+父母管理等级表：根据内容，选择不同等级
+
+dvd导航控制功能：
+节目播放：选择不同节目(标题)
+章节播放
+视角：不同视角
+父母等级管理：不同等级
+音频：
+字幕：
+按时间选择：
+ 
+dvd视频区
+dvd视频区包含视频实际数据和视频管理器VMG，视频标题集VTS
+视频管理器VMG，视频标题集VTS均包含供实际显示的视频对象集VOBS结构
+
+VMG结构：VMGI(视频管理器信息)，VMGM_VOBS(视频对象集),VMGI_BUP(视频管理信息备份) 
+VTS结构: VTSI(视频标题集信息),VTSM_VOBS(视频对象集),VTSTT_VOBS(视频对象集),VTSI_BUP(备份)
+VOBS：视频对象集，有一个或多个VOB组成。VOB有一个或多个视频胞(cell)组成。
+VOB由vob_id识别,cell由cell_id识别
+胞cell由一个或多个视频对象单元VOBU组成
+
+VMGI:视频管理器信息
+VTSI：视频标题集信息
+
+
+ifo_handle_t结构体：对应于ifo文件，里面包含了VMGI和VTSI
+
+
+
+
+
+
+PAL，NTSC，还有SECAM，这是全球现行的三种模拟技术彩色电视的制式
+
+===============================
+ifo结构体
+ifo_data_t
+struct ifo_data_s {
+    dvd_reader_t *reader;
+    uint32_t nr_of_vtss;
+    ifo_handle_t **vtss;//IFO文件结构指针
+    dvd_track_model track_model;//udf，iso
+    int have_css;//css加密
+};
+
+IFO文件结构
+结构分两部分：
+VMGI:描述与视频标题目录（VIDEO_TS.[IFO,BUP]）有关的信息，视频管理信息。
+VTSI：视频标题集信息，从VTS_XX_0.[IFO,BUP]读取信息
+/**
+ * The following structure defines an IFO file.  The structure is divided into
+ * two parts, the VMGI, or Video Manager Information, which is read from the
+ * VIDEO_TS.[IFO,BUP] file, and the VTSI, or Video Title Set Information, which
+ * is read in from the VTS_XX_0.[IFO,BUP] files.
+ */
+ 
+typedef struct {
+  dvd_file_t *file;
+
+  /* VMGI */
+  vmgi_mat_t     *vmgi_mat;//视频管理信息的管理表
+  tt_srpt_t      *tt_srpt;//标题搜索指针
+  pgc_t          *first_play_pgc;//
+  ptl_mait_t     *ptl_mait;//父母管理信息表
+  vts_atrt_t     *vts_atrt;//视频标题及属性表
+  txtdt_mgi_t    *txtdt_mgi;//文字数据管理
+
+  /* Common */
+  pgci_ut_t      *pgci_ut;
+  c_adt_t        *menu_c_adt;
+  vobu_admap_t   *menu_vobu_admap;
+
+  /* VTSI */
+  vtsi_mat_t     *vtsi_mat;vts信息管理表
+  vts_ptt_srpt_t *vts_ptt_srpt;章节收索指针表
+  pgcit_t        *vts_pgcit;节目连信息表
+  vts_tmapt_t    *vts_tmapt;视频标题集时间映射表
+  c_adt_t        *vts_c_adt;视频标题集包地址表
+  vobu_admap_t   *vts_vobu_admap;cobu地址映射
+} ifo_handle_t;
+========
+dvd_reader_t *DVDOpen( const char * );//打开dvd视频
+dvd读取的视频
+dvd_reader_t
+struct dvd_reader_s {
+  /* Basic information. */
+  int isImageFile;
+
+  /* Hack for keeping track of the css status.
+   * 0: no css, 1: perhaps (need init of keys), 2: have done init */
+  int css_state;
+  int css_title; /* Last title that we have called dvdinpute_title for. */
+
+  /* Information required for an image file. */
+  dvd_input_t dev;
+
+  /* Information required for a directory path drive. */
+  char *path_root;
+
+  /* Filesystem cache */
+  int udfcache_level; /* 0 - turned off, 1 - on */
+  void *udfcache;
+};
+
+读取模式：UDF，ISO9660
+////// Find file on UDF first or try it on ISO9660 FS   hanzhicai 20161023
+/*  ////  发现碟子中， IFO 是用 UDF 来读，但是 VOB 确应该用 ISO9660 来读
+////    所以 isVOB=1 的时候表示读取 VOB文件， 使用 ISOFindFile , 
+////		isVOB = 0 的时候  是读取 IFO 文件， 使用 UDFFindFile
+*/
+ void Set_DVDRead_UDFISO9600 (int UDF_ISO)  /////   /////// UDF =1 ; ISO9600 = 2 ; Try UDF then ISO =0 ;
+{
+	
+	SetUDF_ISO9600 = UDF_ISO ;
+}
+//title  info
+struct titles_info_s {
+    uint32_t nr_of_titles;
+    _title_info_t *titles;
+    bool disney;
+};
+
+dvd_file_t *DVDOpenFile( dvd_reader_t *dvd, int titlenum,
+                         dvd_read_domain_t domain )

@@ -23,8 +23,8 @@ typedef struct {
 
 typedef struct {
     uint32_t id;
-    char language[MAX_LANGUAGE_LEN];
-    char codec[MAX_CODEC_LEN];
+    char language[MAX_LANGUAGE_LEN];//语言
+    char codec[MAX_CODEC_LEN];//编码：mpeg1，mpeg2，dts(DTS音轨)，lpcm，ac3
 } _stream_info_t;
 
 typedef enum {
@@ -56,38 +56,38 @@ typedef enum {
 } _audio_lang_extension;
 
 typedef struct {
-    _stream_info_t stream_info;
-    uint32_t sample_rate;
-    char quantization[8];
-    uint32_t nr_of_channels;
+    _stream_info_t stream_info;//流相关信息
+    uint32_t sample_rate;//采样率
+    char quantization[8];//量化，就是把经过抽样得到的瞬时值将其幅度离散，即用一组规定的电平，把瞬时抽样值用最接近的电平值来表示。
+    uint32_t nr_of_channels;//通道数
     _audio_lang_extension lang_extension;
 } _audio_info_t;
 
 typedef struct {
-    _stream_info_t stream_info;
-    char standard[MAX_STANDARD_LEN];
-    uint32_t width;
+    _stream_info_t stream_info;//语言，编码信息
+    char standard[MAX_STANDARD_LEN];//制式：PAL，NTSC，还有SECAM，这是全球现行的三种模拟技术彩色电视的制式
+    uint32_t width;//视频宽
     uint32_t height;
-    uint32_t aspect_width;
-    uint32_t aspect_height;
+    uint32_t aspect_width;//视频宽比例
+    uint32_t aspect_height;//视频高比例
 } _video_info_t;
 
 typedef struct {
-    uint32_t duration;
-    uint32_t vob_id;
-    uint32_t cell_id;
-    uint32_t start;
-    uint32_t end;
-    uint32_t angle;
+    uint32_t duration;//胞持续时间
+    uint32_t vob_id;//vob id
+    uint32_t cell_id;//cell id
+    uint32_t start;//胞开始地址
+    uint32_t end;//胞结束地址
+    uint32_t angle;//视角
 } _cell_info_t;
 
 typedef struct {
-    uint32_t duratio;
-    uint32_t pgcn;
-    uint32_t pgn;
+    uint32_t duratio;//章节时间
+    uint32_t pgcn;//节目链数量
+    uint32_t pgn;//节目数
     uint32_t enter_cell_number;
-    uint32_t nr_of_cell;
-    _cell_info_t *cells;
+    uint32_t nr_of_cell;//胞数量
+    _cell_info_t *cells;//胞指针
 } _chapter_info_t;
 
 typedef struct {
@@ -101,7 +101,7 @@ typedef struct {
 } _playback_type_t;
 
 typedef struct {
-    uint32_t duration;
+    uint32_t duration;//title对应的视频 时间长度
 
     _fraction_t fps;//fps
     _video_info_t video_info;//视频信息
@@ -113,24 +113,24 @@ typedef struct {
     uint32_t nr_of_subpics;
     _subpic_info_t *subpics;
 
-    uint32_t nr_of_chapters;//章节
-    _chapter_info_t *chapters;
+    uint32_t nr_of_chapters;//章节数量
+    _chapter_info_t *chapters;//章节指针
 
     //非显示用属性
-    uint8_t title_set_nr;
-    uint8_t vts_ttn;
+    uint8_t title_set_nr;//vts
+    uint8_t vts_ttn;//vts ttn
     bool time_map;
 
     _playback_type_t pb_ty;
-    uint32_t sector;
+    uint32_t sector;//扇区个数
 
-    int score;
+    int score;//评分
 } _title_info_t;
 
 struct titles_info_s {
-    uint32_t nr_of_titles;
-    _title_info_t *titles;
-    bool disney;
+    uint32_t nr_of_titles;//title总数量
+    _title_info_t *titles;//title指针
+    bool disney;//迪士尼
 };
 
 static const char* get_subp_lang_extension(_subp_lang_extension lang_extension) {

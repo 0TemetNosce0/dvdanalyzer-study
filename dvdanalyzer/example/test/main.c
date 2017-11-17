@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     //    logger_set_level(logger, LOGGER_DEBUG);
     logger_set_level(logger, LOGGER_INFO);
 
-    if (1/*strcmp(argv[2], "title") == 0*/) {//E:/201503/VIDEO_TS
-        ifo_data_t *ifo_data = init_ifo_data("H:/"/*argv[1]*/, title_ifo_load, atoi(0/*argv[3]*/));
+    if (1/*strcmp(argv[2], "title") == 0*/) {//E:/201503/VIDEO_TS  H:/
+        ifo_data_t *ifo_data = init_ifo_data("E:/201503/MIB II.iso"/*argv[1]*/, title_ifo_load, atoi(0/*argv[3]*/));
         if (ifo_data) {
             const char *volume = get_volume(ifo_data);
 

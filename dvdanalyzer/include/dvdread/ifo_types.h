@@ -306,7 +306,7 @@ typedef struct {
   cell_playback_t *cell_playback;
   cell_position_t *cell_position;
   int      ref_count;
-} ATTRIBUTE_PACKED pgc_t;
+} ATTRIBUTE_PACKED pgc_t;//节目链
 #define PGC_SIZE 236U
 
 /**
@@ -735,13 +735,13 @@ typedef struct {
   /* VMGI */
   vmgi_mat_t     *vmgi_mat;//视频管理信息的管理表
   tt_srpt_t      *tt_srpt;//标题搜索指针
-  pgc_t          *first_play_pgc;
-  ptl_mait_t     *ptl_mait;
+  pgc_t          *first_play_pgc;//第一个播放的pgc节目链
+  ptl_mait_t     *ptl_mait;//父母管理等级表
   vts_atrt_t     *vts_atrt;//视频标题集属性表
-  txtdt_mgi_t    *txtdt_mgi;
+  txtdt_mgi_t    *txtdt_mgi;//文字数据管理表
 
   /* Common */
-  pgci_ut_t      *pgci_ut;
+  pgci_ut_t      *pgci_ut;//pgci
   c_adt_t        *menu_c_adt;
   vobu_admap_t   *menu_vobu_admap;
 
