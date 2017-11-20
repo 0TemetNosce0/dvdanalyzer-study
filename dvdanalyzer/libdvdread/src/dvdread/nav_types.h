@@ -24,7 +24,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
+//导控：PCI，DSI
 #ifndef LIBDVDREAD_NAV_TYPES_H
 #define LIBDVDREAD_NAV_TYPES_H
 
@@ -45,7 +45,7 @@
  * PCI General Information
  */
 typedef struct {
-  uint32_t nv_pck_lbn;      /**< sector address of this nav pack */
+  uint32_t nv_pck_lbn;      /**< sector address of this nav pack */// 导控包逻辑块号
   uint16_t vobu_cat;        /**< 'category' of vobu */
   uint16_t zero1;           /**< reserved */
   user_ops_t vobu_uop_ctl;  /**< UOP of vobu */
@@ -54,14 +54,14 @@ typedef struct {
   uint32_t vobu_se_e_ptm;   /**< end ptm of sequence end in vobu */
   dvd_time_t e_eltm;        /**< Cell elapsed time */
   char vobu_isrc[32];
-} ATTRIBUTE_PACKED pci_gi_t;
+} ATTRIBUTE_PACKED pci_gi_t;//pci一般信息
 
 /**
  * Non Seamless Angle Information
  */
 typedef struct {
-  uint32_t nsml_agl_dsta[9];  /**< address of destination vobu in AGL_C#n */
-} ATTRIBUTE_PACKED nsml_agli_t;
+  uint32_t nsml_agl_dsta[9];  /**< address of destination vobu in AGL_C#n *///视角改变时有关目标的地址信息
+} ATTRIBUTE_PACKED nsml_agli_t;//非无接缝视角信息
 
 /**
  * Highlight General Information
@@ -148,11 +148,11 @@ typedef struct {
  * PCI packet
  */
 typedef struct {
-  pci_gi_t    pci_gi;
-  nsml_agli_t nsml_agli;
-  hli_t       hli;
-  uint8_t     zero1[189];
-} ATTRIBUTE_PACKED pci_t;
+  pci_gi_t    pci_gi;//pci一般信息
+  nsml_agli_t nsml_agli;//非无接缝视角信息
+  hli_t       hli;//高亮信息
+  uint8_t     zero1[189];//记录信息
+} ATTRIBUTE_PACKED pci_t;//显示控制信息：控制vobu的显示的导控数据
 
 
 
@@ -171,9 +171,10 @@ typedef struct {
   uint8_t  zero1;           /**< reserved */
   uint8_t  vobu_c_idn;      /**< Cell Id number that this VOBU is part of */
   dvd_time_t c_eltm;        /**< Cell elapsed time */
-} ATTRIBUTE_PACKED dsi_gi_t;
+} ATTRIBUTE_PACKED dsi_gi_t;//数据搜索信息：是搜索和执行无接缝播放该vobu的导控数据
 
 /**
+  Seamless:无接缝
  * Seamless Playback Information
  */
 typedef struct {
@@ -200,7 +201,7 @@ typedef struct {
 } ATTRIBUTE_PACKED sml_agl_data_t;
 
 /**
- * Seamless Angle Information
+ * Seamless Angle Information无接缝视角信息
  */
 typedef struct {
   sml_agl_data_t data[9];
@@ -232,13 +233,13 @@ typedef struct {
  * DSI packet
  */
 typedef struct {
-  dsi_gi_t   dsi_gi;
-  sml_pbi_t  sml_pbi;
-  sml_agli_t sml_agli;
-  vobu_sri_t vobu_sri;
-  synci_t    synci;
+  dsi_gi_t   dsi_gi;//dsi一般信息
+  sml_pbi_t  sml_pbi;//无接缝播放信息
+  sml_agli_t sml_agli;//无接缝播放视角信息
+  vobu_sri_t vobu_sri;//vobu的搜索信息
+  synci_t    synci;//同步信息
   uint8_t    zero1[471];
-} ATTRIBUTE_PACKED dsi_t;
+} ATTRIBUTE_PACKED dsi_t;//数据搜索信息：是搜索和执行无接缝播放该vobu的导控数据
 
 
 #if PRAGMA_PACK

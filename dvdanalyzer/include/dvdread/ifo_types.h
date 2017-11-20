@@ -18,7 +18,7 @@
  * with libdvdread; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
+// IFO:
 #ifndef LIBDVDREAD_IFO_TYPES_H
 #define LIBDVDREAD_IFO_TYPES_H
 
@@ -285,17 +285,17 @@ typedef struct {
  */
 typedef struct {
   uint16_t zero_1;
-  uint8_t  nr_of_programs;
-  uint8_t  nr_of_cells;
-  dvd_time_t playback_time;
+  uint8_t  nr_of_programs;//节目段数目
+  uint8_t  nr_of_cells;//胞数目
+  dvd_time_t playback_time;//
   user_ops_t prohibited_ops;
   uint16_t audio_control[8]; /* New type? */
   uint32_t subp_control[32]; /* New type? */
-  uint16_t next_pgc_nr;
-  uint16_t prev_pgc_nr;
+  uint16_t next_pgc_nr;//下一个pgc
+  uint16_t prev_pgc_nr;//上一个pgc
   uint16_t goup_pgc_nr;
-  uint8_t  still_time;
-  uint8_t  pg_playback_mode;
+  uint8_t  still_time;//pgc静止时间
+  uint8_t  pg_playback_mode;//pgc播放模式
   uint32_t palette[16]; /* New type struct {zero_1, Y, Cr, Cb} ? */
   uint16_t command_tbl_offset;
   uint16_t program_map_offset;
@@ -303,8 +303,8 @@ typedef struct {
   uint16_t cell_position_offset;
   pgc_command_tbl_t *command_tbl;
   pgc_program_map_t  *program_map;
-  cell_playback_t *cell_playback;
-  cell_position_t *cell_position;
+  cell_playback_t *cell_playback;//胞播放信息
+  cell_position_t *cell_position;//胞对应于vobs位置
   int      ref_count;
 } ATTRIBUTE_PACKED pgc_t;//节目链
 #define PGC_SIZE 236U
@@ -493,7 +493,7 @@ typedef struct {
   uint16_t pf_ptl_mai_start_byte;
   uint16_t zero_2;
   pf_level_t *pf_ptl_mai; /* table of (nr_of_vtss + 1), video_ts is first */
-} ATTRIBUTE_PACKED ptl_mait_country_t;
+} ATTRIBUTE_PACKED ptl_mait_country_t;//父母管理信息单元表
 #define PTL_MAIT_COUNTRY_SIZE 8U
 
 /**
@@ -504,7 +504,7 @@ typedef struct {
   uint16_t nr_of_vtss;
   uint32_t last_byte;
   ptl_mait_country_t *countries;
-} ATTRIBUTE_PACKED ptl_mait_t;
+} ATTRIBUTE_PACKED ptl_mait_t;//父母管理信息表
 #define PTL_MAIT_SIZE 8U
 
 /**
@@ -535,7 +535,7 @@ typedef struct {
   uint8_t  zero_9;
   uint8_t  nr_of_vtstt_subp_streams;
   subp_attr_t vtstt_subp_attr[32];
-} ATTRIBUTE_PACKED vts_attributes_t;
+} ATTRIBUTE_PACKED vts_attributes_t;//视频标题属性
 #define VTS_ATTRIBUTES_SIZE 542U
 #define VTS_ATTRIBUTES_MIN_SIZE 356U
 
@@ -543,12 +543,12 @@ typedef struct {
  * Video Title Set Attribute Table.
  */
 typedef struct {
-  uint16_t nr_of_vtss;
+  uint16_t nr_of_vtss;//ifo个数
   uint16_t zero_1;
   uint32_t last_byte;
   vts_attributes_t *vts;
   uint32_t *vts_atrt_offsets; /* offsets table for each vts_attributes */
-} ATTRIBUTE_PACKED vts_atrt_t;
+} ATTRIBUTE_PACKED vts_atrt_t;//视频标题集属性表
 #define VTS_ATRT_SIZE 8U
 
 /**

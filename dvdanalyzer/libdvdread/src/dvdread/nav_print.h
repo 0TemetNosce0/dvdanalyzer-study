@@ -25,7 +25,7 @@
 #include "nav_types.h"
 
 /**
- * Pretty printing of the NAV packets, PCI and DSI structs.
+ * Pretty printing of the NAV packets, PCI and DSI structs.对导航包、PCI和DSI结构进行了漂亮的打印。
  */
 
 #ifdef __cplusplus

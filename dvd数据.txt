@@ -24,6 +24,8 @@ VOB由vob_id识别,cell由cell_id识别
 VMGI:视频管理器信息
 VTSI：视频标题集信息
 
+PGC节目链
+PG节目段：PG是PGCI中定义的一组胞。，一个PGC有1-99个PG。一个PG由1-255个胞组成
 
 ifo_handle_t结构体：对应于ifo文件，里面包含了VMGI和VTSI
 

@@ -24,7 +24,7 @@
 
 #include <inttypes.h>
 #include "dvdread/dvd_reader.h"
-
+//ifo：
 
 #undef ATTRIBUTE_PACKED
 #undef PRAGMA_PACK_BEGIN
@@ -190,14 +190,14 @@ typedef struct {
  * PGC Command Table.
  */
 typedef struct {
-  uint16_t nr_of_pre;
+  uint16_t nr_of_pre;//前置命令个数
   uint16_t nr_of_post;
   uint16_t nr_of_cell;
   uint16_t zero_1;
-  vm_cmd_t *pre_cmds;
-  vm_cmd_t *post_cmds;
-  vm_cmd_t *cell_cmds;
-} ATTRIBUTE_PACKED pgc_command_tbl_t;
+  vm_cmd_t *pre_cmds;//前置命令
+  vm_cmd_t *post_cmds;//后置命令
+  vm_cmd_t *cell_cmds;//胞命令
+} ATTRIBUTE_PACKED pgc_command_tbl_t;//节目链命令表：描述了pgc的前置命令，后置命令，胞命令
 #define PGC_COMMAND_TBL_SIZE 8U
 
 /**
@@ -213,20 +213,20 @@ typedef struct {
   unsigned int block_type       : 2;
   unsigned int seamless_play    : 1;
   unsigned int interleaved      : 1;
-  unsigned int stc_discontinuity: 1;
+  unsigned int stc_discontinuity: 1;//discontinuity不连续
   unsigned int seamless_angle   : 1;
 
   unsigned int playback_mode    : 1;  /**< When set, enter StillMode after each VOBU */
   unsigned int restricted       : 1;  /**< ?? drop out of fastforward? */
   unsigned int unknown2         : 6;
-  uint8_t still_time;
-  uint8_t cell_cmd_nr;
-  dvd_time_t playback_time;
-  uint32_t first_sector;
-  uint32_t first_ilvu_end_sector;
-  uint32_t last_vobu_start_sector;
+  uint8_t still_time;//静止时间
+  uint8_t cell_cmd_nr;//
+  dvd_time_t playback_time;//时间
+  uint32_t first_sector;//第一个扇区,胞的开始地址
+  uint32_t first_ilvu_end_sector;//该胞第一个ilbu开结束地址
+  uint32_t last_vobu_start_sector;//该胞第一个vobu开始地址
   uint32_t last_sector;
-} ATTRIBUTE_PACKED cell_playback_t;
+} ATTRIBUTE_PACKED cell_playback_t;//胞播放信息表
 
 #define BLOCK_TYPE_NONE         0x0
 #define BLOCK_TYPE_ANGLE_BLOCK  0x1
@@ -243,7 +243,7 @@ typedef struct {
   uint16_t vob_id_nr;
   uint8_t  zero_1;
   uint8_t  cell_nr;
-} ATTRIBUTE_PACKED cell_position_t;
+} ATTRIBUTE_PACKED cell_position_t;//胞位置信息表：定义了胞id和vobid
 
 /**
  * User Operations.
@@ -285,28 +285,28 @@ typedef struct {
  */
 typedef struct {
   uint16_t zero_1;
-  uint8_t  nr_of_programs;
-  uint8_t  nr_of_cells;
-  dvd_time_t playback_time;
-  user_ops_t prohibited_ops;
-  uint16_t audio_control[8]; /* New type? */
-  uint32_t subp_control[32]; /* New type? */
+  uint8_t  nr_of_programs;//节目段个数
+  uint8_t  nr_of_cells;//胞个数
+  dvd_time_t playback_time;//时间
+  user_ops_t prohibited_ops;//用户操作控制，pgc正在显示时被禁止的操作
+  uint16_t audio_control[8]; /* New type? *///音频流控制表
+  uint32_t subp_control[32]; /* New type? */ //子图像流控制表
   uint16_t next_pgc_nr;
   uint16_t prev_pgc_nr;
   uint16_t goup_pgc_nr;
-  uint8_t  still_time;
-  uint8_t  pg_playback_mode;
-  uint32_t palette[16]; /* New type struct {zero_1, Y, Cr, Cb} ? */
-  uint16_t command_tbl_offset;
-  uint16_t program_map_offset;
-  uint16_t cell_playback_offset;
-  uint16_t cell_position_offset;
-  pgc_command_tbl_t *command_tbl;
-  pgc_program_map_t  *program_map;
-  cell_playback_t *cell_playback;
-  cell_position_t *cell_position;
+  uint8_t  still_time;//禁止时间
+  uint8_t  pg_playback_mode;//播放模式
+  uint32_t palette[16]; /* New type struct {zero_1, Y, Cr, Cb} ? *///图像流调色板：
+  uint16_t command_tbl_offset;//pgc_program_map_t开始地址
+  uint16_t program_map_offset;//pgc_program_map_t开始地址
+  uint16_t cell_playback_offset;//cell_playback_t开始地址
+  uint16_t cell_position_offset;//cell_position_t开始地址
+  pgc_command_tbl_t *command_tbl;//节目链命令表
+  pgc_program_map_t  *program_map;//节目链的节目映射:描述了pgc中的每一个pg入口胞号，即pg的第一个胞号
+  cell_playback_t *cell_playback;//胞播放信息表
+  cell_position_t *cell_position;//胞位置信息表
   int      ref_count;
-} ATTRIBUTE_PACKED pgc_t;
+} ATTRIBUTE_PACKED pgc_t;//节目链信息：
 #define PGC_SIZE 236U
 
 /**
@@ -319,8 +319,8 @@ typedef struct {
   unsigned int unknown1   : 4;
   uint16_t ptl_id_mask;
   uint32_t pgc_start_byte;
-  pgc_t *pgc;
-} ATTRIBUTE_PACKED pgci_srp_t;
+  pgc_t *pgc;//节目链信息，pgc一般信息
+} ATTRIBUTE_PACKED pgci_srp_t//pgci//节目链信息搜索指针
 #define PGCI_SRP_SIZE 8U
 
 /**
@@ -606,13 +606,13 @@ typedef struct {
  * Video Title Set Information Management Table.
  */
 typedef struct {
-  char vts_identifier[12];
-  uint32_t vts_last_sector;
+  char vts_identifier[12];//VTS识别符
+  uint32_t vts_last_sector;//vts结束地址
   uint8_t  zero_1[12];
-  uint32_t vtsi_last_sector;
+  uint32_t vtsi_last_sector;//vtsi结束地址
   uint8_t  zero_2;
-  uint8_t  specification_version;
-  uint32_t vts_category;
+  uint8_t  specification_version;//视频规格版本
+  uint32_t vts_category;//vts应用分类
   uint16_t zero_3;
   uint16_t zero_4;
   uint8_t  zero_5;
@@ -636,28 +636,28 @@ typedef struct {
   uint32_t vts_vobu_admap;  /* sector */
   uint8_t  zero_13[24];
 
-  video_attr_t vtsm_video_attr;
+  video_attr_t vtsm_video_attr;//vtsm视频属性
   uint8_t  zero_14;
   uint8_t  nr_of_vtsm_audio_streams; /* should be 0 or 1 */
-  audio_attr_t vtsm_audio_attr;
+  audio_attr_t vtsm_audio_attr;//vtsm音频属性
   audio_attr_t zero_15[7];
   uint8_t  zero_16[17];
-  uint8_t  nr_of_vtsm_subp_streams; /* should be 0 or 1 */
-  subp_attr_t vtsm_subp_attr;
+  uint8_t  nr_of_vtsm_subp_streams; /* should be 0 or 1 *///子图像流数
+  subp_attr_t vtsm_subp_attr;//子图像流属性
   subp_attr_t zero_17[27];
   uint8_t  zero_18[2];
 
-  video_attr_t vts_video_attr;
+  video_attr_t vts_video_attr;//vts视频属性
   uint8_t  zero_19;
   uint8_t  nr_of_vts_audio_streams;
-  audio_attr_t vts_audio_attr[8];
+  audio_attr_t vts_audio_attr[8];//vts音频属性
   uint8_t  zero_20[17];
-  uint8_t  nr_of_vts_subp_streams;
-  subp_attr_t vts_subp_attr[32];
+  uint8_t  nr_of_vts_subp_streams;//子图像流数
+  subp_attr_t vts_subp_attr[32];//子图像流属性
   uint16_t zero_21;
-  multichannel_ext_t vts_mu_audio_attr[8];
+  multichannel_ext_t vts_mu_audio_attr[8];//多通道音频流属性表
   /* XXX: how much 'padding' here, if any? */
-} ATTRIBUTE_PACKED vtsi_mat_t;
+} ATTRIBUTE_PACKED vtsi_mat_t;//VTSI管理表
 
 /**
  * PartOfTitle Unit Information.
@@ -700,8 +700,8 @@ typedef uint32_t map_ent_t;
 typedef struct {
   uint8_t  tmu;   /* Time unit, in seconds */
   uint8_t  zero_1;
-  uint16_t nr_of_entries;
-  map_ent_t *map_ent;
+  uint16_t nr_of_entries;//映射入口数
+  map_ent_t *map_ent;//映射入口表
 } ATTRIBUTE_PACKED vts_tmap_t;
 #define VTS_TMAP_SIZE 4U
 
@@ -709,12 +709,12 @@ typedef struct {
  * Time Map Table.
  */
 typedef struct {
-  uint16_t nr_of_tmaps;
+  uint16_t nr_of_tmaps;//时间映射数
   uint16_t zero_1;
   uint32_t last_byte;
-  vts_tmap_t *tmap;
+  vts_tmap_t *tmap;//时间映射搜索指针
   uint32_t *tmap_offset; /* offset table for each tmap */
-} ATTRIBUTE_PACKED vts_tmapt_t;
+} ATTRIBUTE_PACKED vts_tmapt_t;//VTS时间映射表
 #define VTS_TMAPT_SIZE 8U
 
 
@@ -733,11 +733,11 @@ typedef struct {
   dvd_file_t *file;
 
   /* VMGI */
-  vmgi_mat_t     *vmgi_mat;//
-  tt_srpt_t      *tt_srpt;
+  vmgi_mat_t     *vmgi_mat;//视频管理信息的管理表
+  tt_srpt_t      *tt_srpt;//标题搜索指针
   pgc_t          *first_play_pgc;
   ptl_mait_t     *ptl_mait;
-  vts_atrt_t     *vts_atrt;
+  vts_atrt_t     *vts_atrt;//视频标题集属性表
   txtdt_mgi_t    *txtdt_mgi;
 
   /* Common */
@@ -745,13 +745,13 @@ typedef struct {
   c_adt_t        *menu_c_adt;
   vobu_admap_t   *menu_vobu_admap;
 
-  /* VTSI */
-  vtsi_mat_t     *vtsi_mat;
-  vts_ptt_srpt_t *vts_ptt_srpt;
-  pgcit_t        *vts_pgcit;
-  vts_tmapt_t    *vts_tmapt;
-  c_adt_t        *vts_c_adt;
-  vobu_admap_t   *vts_vobu_admap;
+  /* VTSI 视频标题集*/
+  vtsi_mat_t     *vtsi_mat;//VTSI管理表
+  vts_ptt_srpt_t *vts_ptt_srpt;//VTS章节搜索指针表
+  pgcit_t        *vts_pgcit;//VTS节目链信息表
+  vts_tmapt_t    *vts_tmapt;//VTS时间映射表
+  c_adt_t        *vts_c_adt;//VTS胞地址表
+  vobu_admap_t   *vts_vobu_admap;//VTS VOBU地址映射
 } ifo_handle_t;
 
 #endif /* LIBDVDREAD_IFO_TYPES_H */
